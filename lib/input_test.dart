@@ -1,9 +1,7 @@
-import 'package:dart_periphery/dart_periphery.dart';
 import 'dart:io';
+import 'package:libserialport/libserialport.dart';
 
-void main() {
-  var i2c = I2C(1);
-  try{
-    var pi = (i2c)
-  }
+void getAvailablePorts() {
+  List<String> availablePorts = SerialPort.availablePorts;
+  print("The available ports are: $availablePorts");
 }
