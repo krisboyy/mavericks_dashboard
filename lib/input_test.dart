@@ -2,7 +2,7 @@ import 'package:libserialport/libserialport.dart';
 
 String getData() {
   String data = '';
-  final port = SerialPort('/dev/tty/AMA0');
+  final port = SerialPort('/dev/ttyAMA0');
   if (!port.openRead()) {
     print("Error opening port");
     return ("0");
