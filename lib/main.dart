@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mavericks_dashboard/input_test.dart';
@@ -50,6 +52,11 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  IconButton(
+                      onPressed: () {
+                        exit((0));
+                      },
+                      icon: const Icon(Icons.close_sharp)),
                   Image.asset("assets/icons/indicator_left_off.png"),
                   SizedBox(
                     width: 0.5 * screenWidth,
