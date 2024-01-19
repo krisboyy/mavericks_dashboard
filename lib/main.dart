@@ -34,9 +34,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String data = '';
+
   @override
   Widget build(BuildContext context) {
-    getAvailablePorts();
+    data = getData();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -51,10 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Image.asset("assets/icons/indicator_left_off.png"),
                   SizedBox(
                     width: 0.5 * screenWidth,
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "Please wear your seatbelt!",
-                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        "$data!",
+                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -62,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               SizedBox(
-                height: 0.05 * screenWidth,
+                height: 0.025 * screenHeight,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -132,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
-                      fontSize: 40,
+                      fontSize: 35,
                     ),
                   ),
                   const SizedBox(width: 40),

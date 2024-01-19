@@ -102,6 +102,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_libserialport:
+    dependency: "direct main"
+    description:
+      name: flutter_libserialport
+      sha256: "34cc4909eaa5b1502b9e1ad5a7dc597542f009d9adfa37c9a86ae0fb0d3b13fa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -274,3 +282,4 @@ packages:
     version: "0.3.0"
 sdks:
   dart: ">=3.2.4 <4.0.0"
+  flutter: ">=3.0.0"

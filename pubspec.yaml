@@ -39,6 +39,7 @@ dependencies:
   rpi_gpio: ^0.9.1
   dart_periphery: ^0.9.5
   rpi_i2c: ^0.3.1
+  flutter_libserialport: ^0.3.0
   libserialport: ^0.3.0+1
 
 dev_dependencies:

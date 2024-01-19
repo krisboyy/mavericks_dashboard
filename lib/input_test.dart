@@ -1,7 +1,16 @@
-import 'dart:io';
 import 'package:libserialport/libserialport.dart';
 
-void getAvailablePorts() {
-  List<String> availablePorts = SerialPort.availablePorts;
-  print("The available ports are: $availablePorts");
+String getData() {
+  String data = '';
+  final port = SerialPort('/dev/tty/AMA0');
+  if (!port.openRead()) {
+    print("Error opening port");
+    return ("0");
+  }
+
+  SerialPortReader reader = SerialPortReader(port);
+  reader.stream.listen((input) {
+    data = String.fromCharCodes(input);
+  });
+  return data;
 }
