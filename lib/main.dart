@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:mavericks_dashboard/buildCarTopView.dart';
 import 'package:mavericks_dashboard/dartperiphery.dart';
+import 'serialEmulator.dart' as serialData;
 
 void main() {
   runApp(const MavericksDashboard());
@@ -61,7 +62,8 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        data = getSerialData();
+        //data = getSerialData();
+        data = serialData.main();
       });
     });
   }
