@@ -5,8 +5,8 @@ import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mavericks_dashboard/intro_screen.dart';
 import 'package:mavericks_dashboard/topview_builder.dart';
-import 'package:mavericks_dashboard/serial_port_interface.dart';
-//import 'serial_input_emulator.dart' as serial_data;
+//import 'package:mavericks_dashboard/serial_port_interface.dart';
+import 'serial_input_emulator.dart' as serial_data;
 
 void main() {
   runApp(const MavericksDashboard());
@@ -46,15 +46,15 @@ class _DashboardState extends State<Dashboard> {
     0,
     80,
     15,
-    27,
-    27,
+    15,
+    15,
     35,
     450,
-    200,
-    150,
-    300,
-    300,
-    150,
+    450,
+    450,
+    450,
+    450,
+    450,
     1,
     1
   ];
@@ -84,8 +84,8 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        data = getSerialData();
-        //data = serial_data.main();
+        //data = getSerialData();
+        data = serial_data.main();
         if (data[14] == 1) {
           redundantData = List.from(data);
         } else if (data[14] == 0) {
@@ -111,11 +111,30 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  Widget getBatteryPercentage(double screenHeight) {
+    String batteryPercentage = '${data[2].toInt().toString()}%';
+    TextStyle batteryTextStyle = TextStyle(
+      fontFamily: 'Barlow',
+      fontWeight: FontWeight.w700,
+      fontSize: 0.045 * screenHeight,
+    );
+    if (data[2] >= 0 && data[2] < 30) {
+      batteryTextStyle = batteryTextStyle.copyWith(color: Colors.red);
+    } else if (data[2] >= 30 && data[2] < 70) {
+      batteryTextStyle = batteryTextStyle.copyWith(color: Colors.orange);
+    } else if (data[2] >= 70 && data[2] <= 100) {
+      batteryTextStyle = batteryTextStyle.copyWith(color: Colors.green);
+    }
+    Text batteryText = Text(batteryPercentage, style: batteryTextStyle);
+    return batteryText;
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     var ultrasonicData = data.getRange(7, 13).toList(growable: false);
+    var batteryPercentage = getBatteryPercentage(screenHeight);
     return Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
@@ -178,8 +197,8 @@ class _DashboardState extends State<Dashboard> {
                           pointer: GaugePointer.triangle(
                             width: 0.025 * screenWidth,
                             height: 0.025 * screenWidth,
-                            color: Color(0xFF0BE2FF),
-                            position: GaugePointerPosition.surface(),
+                            color: const Color(0xFF0BE2FF),
+                            position: const GaugePointerPosition.surface(),
                           ),
                           style: const GaugeAxisStyle(
                             thickness: 0,
@@ -221,7 +240,7 @@ class _DashboardState extends State<Dashboard> {
                     ? Text(
                         "D",
                         style: TextStyle(
-                          color: Color(0xFF0BE2FF),
+                          color: const Color(0xFF0BE2FF),
                           fontSize: 0.06 * screenHeight,
                           fontFamily: 'Barlow',
                           fontWeight: FontWeight.w900,
@@ -230,7 +249,7 @@ class _DashboardState extends State<Dashboard> {
                     : Text(
                         "R",
                         style: TextStyle(
-                          color: Color(0xFF0BE2FF),
+                          color: const Color(0xFF0BE2FF),
                           fontSize: 0.06 * screenHeight,
                           fontFamily: 'Barlow',
                           fontWeight: FontWeight.w900,
@@ -295,6 +314,23 @@ class _DashboardState extends State<Dashboard> {
                     height: 0.09 * screenHeight,
                   ),
                 ],
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/icons/battery.png',
+                      height: 0.04 * screenHeight,
+                    ),
+                    SizedBox(
+                      width: 0.01 * screenWidth,
+                    ),
+                    batteryPercentage,
+                  ],
+                ),
               )
             ],
           ),
