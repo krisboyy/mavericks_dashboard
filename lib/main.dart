@@ -5,8 +5,8 @@ import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mavericks_dashboard/intro_screen.dart';
 import 'package:mavericks_dashboard/topview_builder.dart';
-//import 'package:mavericks_dashboard/serial_port_interface.dart';
-import 'serial_input_emulator.dart' as serial_data;
+import 'package:mavericks_dashboard/serial_port_interface.dart'; //Use this import to get data from the serial port of the Pi
+//import 'serial_input_emulator.dart' as serial_data; //Use this import with simulated_data
 
 void main() {
   runApp(const MavericksDashboard());
@@ -84,8 +84,8 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        //data = getSerialData();
-        data = serial_data.main();
+        data = getSerialData(); //Use this to receive data from the GPIO ports of the Pi
+        //data = serial_data.main(); //Use this to use simulated data
         if (data[14] == 1) {
           redundantData = List.from(data);
         } else if (data[14] == 0) {
@@ -101,8 +101,6 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-  //List<String> data = [Speed, Seatbelt, Battery, Range, Bat1Temp, Bat2Temp, MotTemp, USFl, USFR, USR, USBR, USBL, USL];
-  //double data = 0;
   int tempChecker() {
     if (data[4] > 35 || (data[5]) > 35 || (data[6]) > 100) {
       return 1;
