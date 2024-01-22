@@ -1,11 +1,12 @@
-import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
-import 'package:mavericks_dashboard/buildCarTopView.dart';
-import 'package:mavericks_dashboard/dartperiphery.dart';
-import 'serialEmulator.dart' as serialData;
+import 'package:marquee/marquee.dart';
+import 'package:mavericks_dashboard/intro_screen.dart';
+import 'package:mavericks_dashboard/topview_builder.dart';
+//import 'package:mavericks_dashboard/serial_port_interface.dart';
+import 'serial_input_emulator.dart' as serial_data;
 
 void main() {
   runApp(const MavericksDashboard());
@@ -25,34 +26,55 @@ class MavericksDashboard extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Dashboard(title: 'Flutter Demo Home Page'),
+      home: const IntroVideo(),
     );
   }
 }
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key, required this.title});
-  final String title;
+  const Dashboard({
+    super.key,
+  });
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<String> data = [
-    '0',
-    '0',
-    '80',
-    '15',
-    '27',
-    '27',
-    '35',
-    '450',
-    '200',
-    '150',
-    '300',
-    '300',
-    '150'
+  List<double> data = [
+    0,
+    0,
+    80,
+    15,
+    27,
+    27,
+    35,
+    450,
+    200,
+    150,
+    300,
+    300,
+    150,
+    1,
+    1
+  ];
+
+  List<double> redundantData = [
+    0,
+    0,
+    80,
+    15,
+    27,
+    27,
+    35,
+    450,
+    200,
+    150,
+    300,
+    300,
+    150,
+    1,
+    1
   ];
 
   late Timer timer;
@@ -60,10 +82,15 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         //data = getSerialData();
-        data = serialData.main();
+        data = serial_data.main();
+        if (data[14] == 1) {
+          redundantData = List.from(data);
+        } else if (data[14] == 0) {
+          data = List.from(redundantData);
+        }
       });
     });
   }
@@ -77,7 +104,7 @@ class _DashboardState extends State<Dashboard> {
   //List<String> data = [Speed, Seatbelt, Battery, Range, Bat1Temp, Bat2Temp, MotTemp, USFl, USFR, USR, USBR, USBL, USL];
   //double data = 0;
   int tempChecker() {
-    if (double.parse(data[4]) > 35 || double.parse(data[5]) > 35 || double.parse(data[6]) > 100) {
+    if (data[4] > 35 || (data[5]) > 35 || (data[6]) > 100) {
       return 1;
     } else {
       return 0;
@@ -88,6 +115,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    var ultrasonicData = data.getRange(7, 13).toList(growable: false);
     return Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
@@ -97,18 +125,14 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        exit((0));
-                      },
-                      icon: const Icon(Icons.close_sharp)),
                   //Image.asset("assets/icons/indicator_left_off.png"),
                   SizedBox(
                       width: 0.5 * screenWidth,
+                      height: 0.1 * screenHeight,
                       child: Center(
-                          child: int.parse(data[1]) == 0
-                              ? Text(
-                                  "Please wear your seatbelt",
+                          child: data[1].toInt() == 0
+                              ? Marquee(
+                                  text: "Please wear your seatbelt! ",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 0.05 * screenHeight,
@@ -129,7 +153,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Image.asset(
                     'assets/compass.png',
-                    width: 0.35 * screenHeight,
+                    width: 0.40 * screenHeight,
                   ),
                   Stack(
                     alignment: Alignment.center,
@@ -140,10 +164,10 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       AnimatedRadialGauge(
                         duration: const Duration(milliseconds: 500),
-                        value: double.parse(data[0]),
+                        value: (data[0]),
                         initialValue: 0,
                         radius: 180,
-                        curve: Curves.elasticOut,
+                        curve: Curves.ease,
                         axis: GaugeAxis(
                           min: 0,
                           max: 40,
@@ -163,7 +187,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                       Text(
-                        data[0],
+                        data[0].toInt().toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 0.35 * screenHeight,
@@ -177,7 +201,9 @@ class _DashboardState extends State<Dashboard> {
                   Container(
                     alignment: Alignment.center,
                     width: 0.40 * screenHeight,
-                    child: CarTopView(),
+                    child: CarTopView(
+                      ultrasonicData: ultrasonicData,
+                    ),
                   )
                 ],
               ),
@@ -191,15 +217,25 @@ class _DashboardState extends State<Dashboard> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                Text(
-                  "D",
-                  style: TextStyle(
-                    color: Color(0xFF0BE2FF),
-                    fontSize: 0.06 * screenHeight,
-                    fontFamily: 'Barlow',
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+                data[13] == 1
+                    ? Text(
+                        "D",
+                        style: TextStyle(
+                          color: Color(0xFF0BE2FF),
+                          fontSize: 0.06 * screenHeight,
+                          fontFamily: 'Barlow',
+                          fontWeight: FontWeight.w900,
+                        ),
+                      )
+                    : Text(
+                        "R",
+                        style: TextStyle(
+                          color: Color(0xFF0BE2FF),
+                          fontSize: 0.06 * screenHeight,
+                          fontFamily: 'Barlow',
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                 Text(
                   "]",
                   style: TextStyle(
@@ -208,12 +244,12 @@ class _DashboardState extends State<Dashboard> {
                     fontFamily: 'Barlow',
                     fontWeight: FontWeight.w900,
                   ),
-                )
+                ),
               ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  int.parse(data[1]) == 0
+                  data[1].toInt() == 0
                       ? Image.asset(
                           "assets/icons/seatbelt_off.png",
                           height: 0.09 * screenHeight,
@@ -234,7 +270,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                   const SizedBox(width: 40),
                   Text(
-                    '69420\nkm',
+                    '43\nkm',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -244,10 +280,15 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   const SizedBox(width: 40),
-                  Image.asset(
-                    "assets/icons/handbrake_on.png",
-                    height: 0.09 * screenHeight,
-                  ),
+                  data[0] == 0
+                      ? Image.asset(
+                          "assets/icons/handbrake_on.png",
+                          height: 0.09 * screenHeight,
+                        )
+                      : Image.asset(
+                          "assets/icons/handbrake_off.png",
+                          height: 0.09 * screenHeight,
+                        ),
                   const SizedBox(width: 20),
                   Image.asset(
                     "assets/icons/highbeam_on.png",
