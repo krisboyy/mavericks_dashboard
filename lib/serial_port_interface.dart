@@ -41,12 +41,12 @@ bool checkDataRanges(List<double> data) {
     Range(0, 50), // Battery 1 Temp
     Range(0, 50), // Battery 2 Temp
     Range(0, 130), // Motor Temperature
-    Range(0, 300), // USFL
-    Range(0, 300), // USFR
-    Range(0, 300), // USR
-    Range(0, 300), // USBR
-    Range(0, 300), // USBL
-    Range(0, 300), // USL
+    Range(-1, 300), // USFL
+    Range(-1, 300), // USFR
+    Range(-1, 300), // USR
+    Range(-1, 300), // USBR
+    Range(-1, 300), // USBL
+    Range(-1, 300), // USL
     Range(0, 1), // Drive or Not
   ];
 

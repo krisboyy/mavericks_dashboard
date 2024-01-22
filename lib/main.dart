@@ -5,8 +5,8 @@ import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mavericks_dashboard/intro_screen.dart';
 import 'package:mavericks_dashboard/topview_builder.dart';
-//import 'package:mavericks_dashboard/serial_port_interface.dart';
-import 'serial_input_emulator.dart' as serial_data;
+import 'package:mavericks_dashboard/serial_port_interface.dart';
+//import 'serial_input_emulator.dart' as serial_data;
 
 void main() {
   runApp(const MavericksDashboard());
@@ -64,15 +64,15 @@ class _DashboardState extends State<Dashboard> {
     0,
     80,
     15,
-    27,
-    27,
+    15,
+    15,
     35,
     450,
-    200,
-    150,
-    300,
-    300,
-    150,
+    450,
+    450,
+    450,
+    450,
+    450,
     1,
     1
   ];
@@ -84,8 +84,8 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        //data = getSerialData();
-        data = serial_data.main();
+        data = getSerialData();
+        //data = serial_data.main();
         if (data[14] == 1) {
           redundantData = List.from(data);
         } else if (data[14] == 0) {

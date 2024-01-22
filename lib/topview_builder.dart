@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CarTopView extends StatefulWidget {
-  List<double> ultrasonicData;
-  CarTopView({required this.ultrasonicData, super.key});
+  final List<double> ultrasonicData;
+  const CarTopView({required this.ultrasonicData, super.key});
 
   @override
   State<CarTopView> createState() => _CarTopViewState();
@@ -25,7 +25,7 @@ class _CarTopViewState extends State<CarTopView> {
       return 'okay';
     } else if (value >= 200 && value < 300) {
       return 'cool';
-    } else if (value >= 300) {
+    } else if (value >= 300 || value == -1) {
       return 'out_of_range';
     } else {
       return ''; // Handle unexpected cases
