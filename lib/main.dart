@@ -82,7 +82,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       setState(() {
         data = getSerialData(); //Use this to receive data from the GPIO ports of the Pi
         //data = serial_data.main(); //Use this to use simulated data
