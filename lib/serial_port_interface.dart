@@ -8,21 +8,21 @@ List<double> getSerialData() {
     var event = s.read(256, 100);
     String input = event.toString();
     rawData = input.split(',');
-    if (rawData.length == 14) {
+    if (rawData.length == 5) {
       // Try parsing each element to double
       data = rawData.map((e) => double.tryParse(e) ?? 0.0).toList();
 
       // Check if the parsed values fall within expected ranges
       if (checkDataRanges(data)) {
-        print("Data is valid: $data");
+        //print("Data is valid: $data");
         data.add(1);
       } else {
-        print("Invalid data: $data");
+        //print("Invalid data: $data");
         data.add(0);
       }
     } else {
       print("Invalid data length: $rawData");
-      data = List.filled(15, 0);
+      data = List.filled(6, 0);
     }
   } finally {
     s.dispose();
@@ -35,19 +35,10 @@ bool checkDataRanges(List<double> data) {
   // Define the expected ranges for each variable
   List<Range> expectedRanges = [
     Range(0, 40), // Speed
-    Range(0, 1), // Seatbelt
     Range(0, 100), // Battery Percentage
-    Range(0, 20), // Range
-    Range(0, 50), // Battery 1 Temp
-    Range(0, 50), // Battery 2 Temp
-    Range(0, 130), // Motor Temperature
-    Range(-1, 300), // USFL
-    Range(-1, 300), // USFR
-    Range(-1, 300), // USR
-    Range(-1, 300), // USBR
-    Range(-1, 300), // USBL
-    Range(-1, 300), // USL
-    Range(0, 1), // Drive or Not
+    Range(0, 50), // Range
+    Range(0, 50), // Temp
+    Range(-1, 300), // US
   ];
 
   if (data.length != expectedRanges.length) {

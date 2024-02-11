@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
-class CarTopView extends StatefulWidget {
-  final List<double> ultrasonicData;
-  const CarTopView({required this.ultrasonicData, super.key});
+class ScooterTopView extends StatefulWidget {
+  final double ultrasonicData;
+  const ScooterTopView({required this.ultrasonicData, super.key});
 
   @override
-  State<CarTopView> createState() => _CarTopViewState();
+  State<ScooterTopView> createState() => _ScooterTopViewState();
 }
 
-class _CarTopViewState extends State<CarTopView> {
-  List<String> ultrasonicStatus() {
-    List<String> status = [];
-    for (double value in widget.ultrasonicData) {
-      String category = getCategory(value);
-      status.add(category);
-    }
+class _ScooterTopViewState extends State<ScooterTopView> {
+  String ultrasonicStatus() {
+    String status = '';
+    status = getCategory(widget.ultrasonicData);
     return status;
   }
 
@@ -34,8 +31,8 @@ class _CarTopViewState extends State<CarTopView> {
 
   @override
   Widget build(BuildContext context) {
-    print("In topview builder, us data: ${widget.ultrasonicData}");
-    List<String> usStatus = ultrasonicStatus();
+    //print("In topview builder, us data: ${widget.ultrasonicData}");
+    String usStatus = ultrasonicStatus();
     String imagePath = 'assets/ultrasonic';
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -45,80 +42,22 @@ class _CarTopViewState extends State<CarTopView> {
         alignment: Alignment.center,
         child: Column(
           children: [
-            Row(children: [
-              SizedBox(
-                width: 0.06 * screenWidth,
+            SizedBox(
+              width: 0.25 * screenHeight,
+              height: 0.25 * screenHeight,
+              child: Image.asset(
+                'assets/scooter_topview.png',
+                fit: BoxFit.scaleDown,
               ),
-              SizedBox(
-                width: 0.05 * screenWidth,
-                height: 0.05 * screenHeight,
-                child: Image.asset(
-                  '$imagePath/${usStatus[0]}/fl.png',
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-              SizedBox(
-                width: 0.05 * screenWidth,
-                height: 0.05 * screenHeight,
-                child: Image.asset(
-                  '$imagePath/${usStatus[1]}/fr.png',
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-              SizedBox(
-                width: 0.05 * screenWidth,
-              ),
-            ]),
-            Row(
-              children: [
-                SizedBox(
-                  height: 0.15 * screenHeight,
-                  width: 0.04 * screenWidth,
-                  child: Image.asset(
-                    '$imagePath/${usStatus[2]}/l.png',
-                    fit: BoxFit.scaleDown,
-                  ),
-                ),
-                SizedBox(
-                  width: 0.25 * screenHeight,
-                  height: 0.25 * screenHeight,
-                  child: Image.asset(
-                    'assets/car_topview.png',
-                    fit: BoxFit.scaleDown,
-                  ),
-                ),
-                SizedBox(
-                  height: 0.15 * screenHeight,
-                  width: 0.04 * screenWidth,
-                  child: Image.asset(
-                    '$imagePath/${usStatus[3]}/r.png',
-                    fit: BoxFit.scaleDown,
-                  ),
-                ),
-              ],
             ),
-            Row(children: [
-              SizedBox(
-                width: 0.06 * screenWidth,
-              ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               SizedBox(
                 width: 0.05 * screenWidth,
                 height: 0.05 * screenHeight,
                 child: Image.asset(
-                  '$imagePath/${usStatus[4]}/rl.png',
+                  '$imagePath/$usStatus.png',
                   fit: BoxFit.scaleDown,
                 ),
-              ),
-              SizedBox(
-                width: 0.05 * screenWidth,
-                height: 0.05 * screenHeight,
-                child: Image.asset(
-                  '$imagePath/${usStatus[5]}/rr.png',
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-              SizedBox(
-                width: 0.05 * screenWidth,
               ),
             ]),
           ],
